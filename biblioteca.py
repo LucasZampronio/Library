@@ -3,21 +3,24 @@ class Biblioteca:
     def __init__(self):
         self.listaLivro = []
         self.livrosalvar = []
-
-        arquivotxt = open('../biblioteca/dados.txt', 'r', encoding='utf-8')
-
-        dados = arquivotxt.readlines()
-        arquivotxt.close()
-
-        for linha in dados:
-            linha = linha.strip()
-            dadoslivro = linha.split(',')
-            codigo = int(dadoslivro[1])
-            ano = int(dadoslivro[4])
-            valor = float(dadoslivro[5])
-            estoque = int(dadoslivro[6])
-            livro = Livro(dadoslivro[0].strip(), codigo, dadoslivro[2].strip(),dadoslivro[3].strip(),ano,valor,estoque)
-            self.listaLivro.append(livro)
+        self.carregar_livros_do_arquivo('dados.txt')
+        
+    def carregar_livros_do_arquivo(self,caminho):
+        try:
+            with open(caminho, 'r', encoding='utf-8') as arquivotxt:
+                for linha in arquivotxt:
+                    linha = linha.strip()
+                    dadoslivro = linha.split(',')
+                    codigo = int(dadoslivro[1])
+                    ano = int(dadoslivro[4])
+                    valor = float(dadoslivro[5])
+                    estoque = int(dadoslivro[6])
+                    livro = Livro(dadoslivro[0].strip(), codigo, dadoslivro[2].strip(),dadoslivro[3].strip(),ano,valor,estoque)
+                    self.listaLivro.append(livro)
+        except FileNotFoundError:
+            print(f'Arquivo {caminho} não encontrado.')
+        except Exception as e:
+            print(f'Erro ao carregar o arquivo: {e}')
 
 
     def listar_livro(self):
