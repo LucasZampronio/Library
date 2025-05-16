@@ -9,15 +9,30 @@ class Biblioteca:
     def carregar_livros_do_arquivo(self,caminho):
         try:
             with open(caminho, 'r', encoding='utf-8') as arquivotxt:
+                filial_linha = None
                 for linha in arquivotxt:
                     linha = linha.strip()
-                    dadoslivro = linha.split(',')
-                    codigo = int(dadoslivro[1])
-                    ano = int(dadoslivro[4])
-                    valor = float(dadoslivro[5])
-                    estoque = int(dadoslivro[6])
-                    livro = Livro(dadoslivro[0].strip(), codigo, dadoslivro[2].strip(),dadoslivro[3].strip(),ano,valor,estoque)
-                    self.listaLivro.append(livro)
+                    if linha.startswith('#FL'):
+                        dados = linha.split(',')[1:]
+                        codigofilial = dados[0]
+                        nome = dados[1]
+                        endereco = dados[2]
+                        contato = dados[3]
+                        filial_linha = Filial(codigofilial, nome, endereco, contato)
+                        self.lista_filiais.append(filial_linha)
+                    else:
+                        if filial_linha:
+                            dadoslivro = linha.split(',')
+                            titulo = dadoslivro[1].strip()
+                            codigo = int(dadoslivro[0])
+                            area = dadoslivro[3].strip()
+                            editora = dadoslivro[4].strip()
+                            ano = int(dadoslivro[2])
+                            valorCifrao = dadoslivro[5].replace('R$', '')
+                            valor = float(valorCifrao)
+                            estoque = int(dadoslivro[6])
+                            livro = Livro(titulo,codigo,editora,area,ano,valor,estoque)
+                            filial_linha.listalivros.append(livro)
         except FileNotFoundError:
             print(f'Arquivo {caminho} não encontrado.')
         except Exception as e:
@@ -25,12 +40,17 @@ class Biblioteca:
 
     def salvar_arquivo(self):
 
-        arquivotxt = open('dados.txt', 'a', encoding='utf-8')
-        for livro in self.livrosalvar:
-            dados = f'{livro.titulo},{livro.codigo},{livro.editora},{livro.area},{livro.ano},{livro.valor},{livro.estoque}\n'
-            arquivotxt.writelines(dados)
-        arquivotxt.close()
-
+        try:
+            with open('dados.txt', 'w', encoding='utf-8') as arquivotxt:
+                for filial in self.lista_filiais:
+                    arquivotxt.write(f'#FL,{filial.codigo},{filial.nome},{filial.endereco},{filial.contato}\n')
+                    for livro in filial.listalivros:
+                        valorCifrao = f'R${livro.valor:.2f}'
+                        dados = f'{livro.codigo},{livro.titulo},{livro.ano},{livro.area},{livro.editora},{valorCifrao},{livro.estoque}\n'
+                        arquivotxt.write(dados)
+            print('Dados salvos com sucesso!')
+        except Exception as e:
+            print(f'Erro ao salvar os dados: {e}')
 ## Definindo Funções filiais------------------------------------------------------------
     def cadastrar_filial(self):
         codigo = (input("Digite o codigo da filial: "))
@@ -57,7 +77,6 @@ class Biblioteca:
         if salvar == 1:
             self.salvar_arquivo()
             print('')
-            print('Salvado com sucesso!')
         else:
             print('')
             print('Alterações não salvas, sistema encerrado!')
@@ -83,7 +102,6 @@ class Biblioteca:
                 biblioteca.listar_estoque_filial()
                 #biblioteca.listar_livro()
                 print(f'\n')
-                print('Esses são nossos livros!')
                 print('---------------------------------')
                 opcao = int(input(f' 1 - Voltar ao menu \n 0 - Encerrar atividades'))
                 if opcao == 0:
@@ -193,7 +211,7 @@ class Biblioteca:
                 if livro.titulo == nome:
                      print(f'>>>>> Cod#{livro.codigo} \n Titulo/Editora: {livro.titulo}/{livro.editora} \n Categoria: {livro.area} \n Valor: R$ {livro.valor} \n Estoque: {livro.estoque} unidades  \n Valor total em estoque: R$ {livro.estoque * livro.valor}')
         else:
-            print(f'Filial com código {codigofilial} não encontrada.')
+            print(f'Livro com o nome {nome} não encontrado.')
             print('---------------------------------')
 
     def buscar_categoria(self):
@@ -201,11 +219,11 @@ class Biblioteca:
         filial = next((f for f in self.lista_filiais if f.codigo == codigofilial), None)
         if filial:
             categoria = input(f'Digite a categoria do livro que deseja buscar: ')
-            for livro in self.listaLivro:
+            for livro in filial.listalivros:
                 if livro.area == categoria:
                      print(f'>>>>> Cod#{livro.codigo} \n Titulo/Editora: {livro.titulo}/{livro.editora} \n Categoria: {livro.area} \n Valor: R$ {livro.valor} \n Estoque: {livro.estoque} unidades  \n Valor total em estoque: R$ {livro.estoque * livro.valor}')
         else:
-            print(f'Filial com código {codigofilial} não encontrada.')
+            print(f'Livro com categoria {categoria} não encontrada.')
             print('---------------------------------')
 
     def valortotal_estoque(self):
@@ -217,14 +235,14 @@ class Biblioteca:
                 soma += livro.valor * livro.estoque
                 print(f'Valor total no estoque: R$ {soma}')
         else:
-            print(f'Filial com código {codigofilial} não encontrada.')
+            print(f'Estoque não encontrado.')
             print('---------------------------------')
 
 
 
     def cadastrar_livro(self):
         titulo = input("Digite o título do livro: ")
-        codigo = input("Digite o código do livro: ")
+        codigo = int(input("Digite o código do livro: "))
         editora = input("Digite a editora do livro: ")
         area = input("Digite a categoria do livro: ")
         ano = int(input("Digite o ano do livro: "))
@@ -245,8 +263,11 @@ class Biblioteca:
         
     def listar_estoque_filial(self):
         codigofilial = input('Digite o código da filial: ')
+        print('')
         filial = next((f for f in self.lista_filiais if f.codigo == codigofilial), None)
         if filial:
+            print(f'Filial: {filial.nome}')
+            print('')
             for livro in filial.listalivros:
                 print(f'>>>>> Cod#{livro.codigo} \n Título/Editora: {livro.titulo}/{livro.editora} \n Categoria: {livro.area} \n Valor: R$ {livro.valor} \n Estoque: {livro.estoque} unidades  \n Valor total em estoque: R$ {livro.estoque * livro.valor}')
         else:
@@ -255,6 +276,8 @@ class Biblioteca:
     def buscar_codigo_filial(self):
         codigolivro = int(input('Digite o código do livro: '))
         print('---------------------------------')
+        livroencontrado = None
+        estoquelivro = 0
         somaestoque = 0
         for filial in self.lista_filiais:
             for livro in filial.listalivros:
@@ -302,9 +325,4 @@ class Livro:
 
 if __name__ == "__main__":
     biblioteca = Biblioteca()
-    biblioteca.lista_filiais.append(Filial('1', 'Filial Centro', 'Rua A, 123', '1234-5678'))
-    biblioteca.lista_filiais.append(Filial('2', 'Filial Sul', 'Rua B, 456', '9876-5432'))
-    biblioteca.lista_filiais[0].listalivros.append(Livro('Livro A', 321, 'Editora A', 'Ficção', 2020, 29.90, 10))
-    biblioteca.lista_filiais[0].listalivros.append(Livro('Livro B', 123, 'Editora B', 'Não-ficção', 2021, 39.90, 5))
-    biblioteca.lista_filiais[1].listalivros.append(Livro('Livro B', 321, 'Editora B', 'Não-ficção', 2021, 39.90, 5))
     biblioteca.menu()
