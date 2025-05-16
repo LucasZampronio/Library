@@ -205,13 +205,15 @@ class Biblioteca:
     def buscar_nome(self):
         codigofilial = input('Digite o código da filial: ')
         filial = next((f for f in self.lista_filiais if f.codigo == codigofilial), None)
+        nome = input(f'Digite o nome do livro que deseja buscar: ')
         if filial:
-            nome = (input(f'Digite o nome do livro que deseja buscar: '))
             for livro in filial.listalivros:
                 if livro.titulo == nome:
                      print(f'>>>>> Cod#{livro.codigo} \n Titulo/Editora: {livro.titulo}/{livro.editora} \n Categoria: {livro.area} \n Valor: R$ {livro.valor} \n Estoque: {livro.estoque} unidades  \n Valor total em estoque: R$ {livro.estoque * livro.valor}')
+                else:
+                    print(f'Livro com nome {nome} não encontrado.')
         else:
-            print(f'Livro com o nome {nome} não encontrado.')
+            print(f'Digito da filial errado ou não existe.')
             print('---------------------------------')
 
     def buscar_categoria(self):
