@@ -55,6 +55,9 @@ class Biblioteca:
     def cadastrar_filial(self):
         codigo = (input("Digite o codigo da filial: "))
         nome = (input("Digite o nome da filial: "))
+        for filial in self.lista_filiais:
+            if filial.codigo == codigo or filial.nome == nome:
+                print('Filial já cadastrada!')
         endereco = input("Digite o endereco da filial: ")
         contato = input("Digite o contato da filial: ")
         filianovo = Filial(codigo,nome,endereco,contato)
