@@ -2,3 +2,4 @@
 8090,Harry Potter,2003,Fantasia,JK,R$10.00,3
 #FL490,Praia de Belas,Av Marina 120, 3133-3331
 1030,Creed,2018,Luta,Michael B.Jordan,R$47,99,20
+239,Star Wars,Ficcao,Lucas,R$129,00,2
