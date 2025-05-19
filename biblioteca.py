@@ -274,25 +274,6 @@ class Biblioteca:
             filial.listalivros.append(livronovo)
             filial.livrosalvar.append(livronovo)
             print(f'Livro {livronovo.titulo} cadastrado na filial {filial.nome}.')
-
-         
-#        if filial:
-#            for livro in filial.listalivros:
-#                if livro.codigo == codigo or livro.titulo == titulo:
-#                    livro.estoque += estoque
-#                else:
-#                    filial.listalivros.append(livronovo)
-#                    filial.livrosalvar.append(livronovo)
-#            print(f'Livro {livronovo.titulo} cadastrado na filial {filial.nome}.')
-#        else:
-#            print(f'Filial com código {filialcodigo} não encontrada.')
-#        for filial in self.lista_filiais:
-#            for livro in filial.listalivros:
-#                if livro.codigo == codigo or livro.titulo == titulo:
-#                    livro.codigo = codigo
-#                    livro.titulo = titulo
-
-
         
     def listar_estoque_filial(self):
         codigofilial = input('Digite o código da filial: ')
