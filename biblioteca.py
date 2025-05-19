@@ -26,7 +26,7 @@ class Biblioteca:
                             titulo = dadoslivro[1].strip()
                             codigo = int(dadoslivro[0])
                             area = dadoslivro[3].strip()
-                            editora = dadoslivro[4].strip()
+                            editora = dadoslivro[4].strip() 
                             ano = int(dadoslivro[2])
                             valorCifrao = dadoslivro[5].replace('R$', '')
                             valor = float(valorCifrao)
@@ -66,7 +66,7 @@ class Biblioteca:
 
     def listar_filiais(self):
         codigofilial = input('Digite o código da filial: ')
-        filial = next((f for f in self.lista_filiais if f.codigo == codigofilial), None)
+        filial = next((filial for filial in self.lista_filiais if filial.codigo == codigofilial), None)
         if filial:
             print(f'>>>>> Cod#{filial.codigo} \n Nome: {filial.nome} \n Endereço: {filial.endereco} \n Contato: {filial.contato}')
             print('---------------------------------')
@@ -184,7 +184,7 @@ class Biblioteca:
     def buscar_estoque(self):
         numeroestoque = int(input(f'Digite o numero minimo de estoque que deseja buscar: '))
         codigofilial = int(input('Digite o código da filial que deseja buscar: '))
-        filial = next((f for f in self.lista_filiais if f.codigo == codigofilial), None)
+        filial = next((filial for filial in self.lista_filiais if filial.codigo == codigofilial), None)
         if filial:
             for livro in filial.listalivros:
                 if livro.estoque >= numeroestoque:
@@ -195,7 +195,7 @@ class Biblioteca:
 
     def buscar_preco(self):
         codigofilial = input('Digite o código da filial: ')
-        filial = next((f for f in self.lista_filiais if f.codigo == codigofilial), None)
+        filial = next((filial for filial in self.lista_filiais if filial.codigo == codigofilial), None)
         if filial:
             preco = float(input(f'Digite o preço limite que deseja buscar: '))
             for livro in filial.listalivros:
@@ -207,7 +207,7 @@ class Biblioteca:
 
     def buscar_nome(self):
         codigofilial = input('Digite o código da filial: ')
-        filial = next((f for f in self.lista_filiais if f.codigo == codigofilial), None)
+        filial = next((filial for filial in self.lista_filiais if filial.codigo == codigofilial), None)
         nome = input(f'Digite o nome do livro que deseja buscar: ')
         if filial:
             for livro in filial.listalivros:
@@ -221,7 +221,7 @@ class Biblioteca:
 
     def buscar_categoria(self):
         codigofilial = input('Digite o código da filial: ')
-        filial = next((f for f in self.lista_filiais if f.codigo == codigofilial), None)
+        filial = next((filial for filial in self.lista_filiais if filial.codigo == codigofilial), None)
         if filial:
             categoria = input(f'Digite a categoria do livro que deseja buscar: ')
             for livro in filial.listalivros:
@@ -234,7 +234,7 @@ class Biblioteca:
     def valortotal_estoque(self):
         soma = 0
         codigofilial = input('Digite o código da filial: ')
-        filial = next((f for f in self.lista_filiais if f.codigo == codigofilial), None)
+        filial = next((filial for filial in self.lista_filiais if filial.codigo == codigofilial), None)
         if filial:
              for livro in filial.listalivros:
                 soma += livro.valor * livro.estoque
@@ -254,22 +254,50 @@ class Biblioteca:
         valor = float(input("Digite o valor do livro: "))
         estoque = int(input("Digite o estoque do livro: "))
         filialcodigo = input("Digite o código da filial: ")
+        filial = next((filial for filial in self.lista_filiais if filial.codigo == filialcodigo), None)
+        livronovo = Livro(titulo, codigo, editora, area, ano, valor, estoque) 
+        if not filial:
+            print(f'Filial com código {filialcodigo} não registrada.')
 
-        livronovo = Livro(titulo, codigo, editora, area, ano, valor, estoque)
 
-        filial = next((f for f in self.lista_filiais if f.codigo == filialcodigo), None)
-        if filial:
+        livroexistente = next((livro for livro in filial.listalivros if livro.codigo == codigo or livro.titulo == titulo), None)  
+        if livroexistente:
+            livroexistente.estoque += estoque
+            print(f'Livro {livroexistente.titulo} atualizado na filial {filial.nome} agora com estoque total de {livroexistente.estoque}.')
+                
+        else:
+            for filial in self.lista_filiais:
+                for livro in filial.listalivros:
+                    if livro.codigo == codigo or livro.titulo == titulo:
+                        livro.codigo = codigo
+                        livro.titulo = titulo
             filial.listalivros.append(livronovo)
             filial.livrosalvar.append(livronovo)
             print(f'Livro {livronovo.titulo} cadastrado na filial {filial.nome}.')
-        else:
-            print(f'Filial com código {filialcodigo} não encontrada.')
+
+         
+#        if filial:
+#            for livro in filial.listalivros:
+#                if livro.codigo == codigo or livro.titulo == titulo:
+#                    livro.estoque += estoque
+#                else:
+#                    filial.listalivros.append(livronovo)
+#                    filial.livrosalvar.append(livronovo)
+#            print(f'Livro {livronovo.titulo} cadastrado na filial {filial.nome}.')
+#        else:
+#            print(f'Filial com código {filialcodigo} não encontrada.')
+#        for filial in self.lista_filiais:
+#            for livro in filial.listalivros:
+#                if livro.codigo == codigo or livro.titulo == titulo:
+#                    livro.codigo = codigo
+#                    livro.titulo = titulo
+
 
         
     def listar_estoque_filial(self):
         codigofilial = input('Digite o código da filial: ')
         print('')
-        filial = next((f for f in self.lista_filiais if f.codigo == codigofilial), None)
+        filial = next((filial for filial in self.lista_filiais if filial.codigo == codigofilial), None)
         if filial:
             print(f'Filial: {filial.nome}')
             print('')
