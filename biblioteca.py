@@ -4,6 +4,52 @@ class Biblioteca:
         self.lista_filiais = []
         self.carregar_livros_do_arquivo('dados.txt')
 
+    def menu(self):
+        while True:
+            print('---------------------------------')
+            selection = input(
+                f' 1 – Cadastrar novo livro \n 2 – Listar livros \n 3 – Buscar livros por nome \n 4 – Buscar livros por categoria \n 5 – Buscar livros por preço \n 6 – Busca por quantidade em estoque \n 7 – Valor total no estoque \n 8 – Cadastrar Filial \n 9 - Listagem estoque da filial \n 10 – Informação filial \n 11 - Buscar livro pelo codigo em filiais \n 0 – Encerrar atividades \n ---------------------------------\n')
+
+            if selection == '1':
+                biblioteca.cadastrar_livro()
+            elif selection == '2':
+                biblioteca.listar_estoque_filial()
+ 
+            elif selection == '3':
+                biblioteca.buscar_nome()
+    
+            elif selection == '4':
+                biblioteca.buscar_categoria()
+
+            elif selection == '5':
+                biblioteca.buscar_preco()
+
+            elif selection == '6':
+                biblioteca.buscar_estoque()
+
+            elif selection == '7':
+                biblioteca.valortotal_estoque()
+
+            elif selection == '8':
+                biblioteca.cadastrar_filial()
+    
+            elif selection == '9':
+                filial = self.buscar_codigo_filial()
+                if filial:
+                    filial.listar_estoque_filial()
+                else: print('Filial não encontrada.')
+            elif selection == '10':
+                biblioteca.listar_filiais()
+
+            elif selection == '11':
+                biblioteca.buscar_codigo_filial()
+            else:
+                print('Opção inválida. Tente novamente.')
+            if not self.voltar_ou_encerrar():
+                biblioteca.menu_salvar()
+                break
+
+
 ## Definindo Abertura arquivo e leitura------------------------------------------------------------
         
     def carregar_livros_do_arquivo(self,caminho):
@@ -51,7 +97,11 @@ class Biblioteca:
             print('Dados salvos com sucesso!')
         except Exception as e:
             print(f'Erro ao salvar os dados: {e}')
+
+
+
 ## Definindo Funções filiais------------------------------------------------------------
+
     def cadastrar_filial(self):
         codigo = (input("Digite o codigo da filial: "))
         nome = (input("Digite o nome da filial: "))
@@ -66,129 +116,42 @@ class Biblioteca:
 
     def listar_filiais(self):
         codigofilial = int(input('Digite o código da filial: '))
-        filial = next((filial for filial in self.lista_filiais if filial.codigo == codigofilial), None)
-        if filial:
-            print(f'>>>>> Cod#{filial.codigo} \n Nome: {filial.nome} \n Endereço: {filial.endereco} \n Contato: {filial.contato}')
+        for filial in self.lista_filiais:
+            if filial.codigo == codigofilial:
+                filialencontrada = filial
+        if filialencontrada:
+            print(filialencontrada)
             print('---------------------------------')
         else:
             print(f'Filial com código {codigofilial} não encontrada.')
             print('---------------------------------')
 
-## Definindo A Interface ------------------------------------------------------------
+## Funções para busca ------------------------------------------------------------
+
     def menu_salvar(self):
-        salvar = int(input('Deseja salvar as alterações?\n 1 - Sim \n 0 - Não'))
-        if salvar == 1:
+        salvar = input('Deseja salvar as alterações?\n 1 - Sim \n 0 - Não')
+        if salvar == '1':
             self.salvar_arquivo()
             print('')
         else:
             print('')
             print('Alterações não salvas, sistema encerrado!')
 
-    def menu(self):
-        while True:
-            print('---------------------------------')
-            selection = int(input(
-                f' 1 – Cadastrar novo livro \n 2 – Listar livros \n 3 – Buscar livros por nome \n 4 – Buscar livros por categoria \n 5 – Buscar livros por preço \n 6 – Busca por quantidade em estoque \n 7 – Valor total no estoque \n 8 – Cadastrar Filial \n 9 - Listagem estoque da filial \n 10 – Buscar filial \n 11 - Buscar livro pelo codigo em filiais \n 0 – Encerrar atividades \n ---------------------------------\n'))
 
-            if selection == 1:
-                #biblioteca.cadastrar_livro()
-                biblioteca.cadastrar_livro()
-                print()
-                print('---------------------------------')
-                opcao = int(input(f' 1 - Voltar ao menu \n 0 - Encerrar atividades'))
-                
-                if opcao == 0:
-                    biblioteca.menu_salvar()
-                    break
-            
-            elif selection == 2:
-                biblioteca.listar_estoque_filial()
-                #biblioteca.listar_livro()
-                print(f'\n')
-                print('---------------------------------')
-                opcao = int(input(f' 1 - Voltar ao menu \n 0 - Encerrar atividades'))
-                if opcao == 0:
-                    biblioteca.menu_salvar()
-                    break
-            elif selection == 3:
-                biblioteca.buscar_nome()
-                print('---------------------------------')
-                opcao = int(input(f' 1 - Voltar ao menu \n 0 - Encerrar atividades'))
-                if opcao == 0:
-                    biblioteca.menu_salvar()
-                    break
-            elif selection == 4:
-                biblioteca.buscar_categoria()
-                print('---------------------------------')
-                opcao = int(input(f' 1 - Voltar ao menu \n 0 - Encerrar atividades'))
-                if opcao == 0:
-                    biblioteca.menu_salvar()
-                    break
-            elif selection == 5:
-                biblioteca.buscar_preco()
-                print('---------------------------------')
-                opcao = int(input(f' 1 - Voltar ao menu \n 0 - Encerrar atividades'))
-                if opcao == 0:
-                    biblioteca.menu_salvar()
-                    break
-            elif selection == 6:
-                biblioteca.buscar_estoque()
-                print('---------------------------------')
-                opcao = int(input(f' 1 - Voltar ao menu \n 0 - Encerrar atividades'))
-                if opcao == 0:
-                    biblioteca.menu_salvar()
-                    break
-            elif selection == 7:
-                biblioteca.valortotal_estoque()
-                print('---------------------------------')
-                opcao = int(input(f' 1 - Voltar ao menu \n 0 - Encerrar atividades'))
-                if opcao == 0:
-                    biblioteca.menu_salvar()
-                    break
-            elif selection == 0:
-                print('---------------------------------')
-                opcao = int(input(f' 1 - Voltar ao menu \n 0 - Encerrar atividades'))
-                if opcao == 0:
-                    biblioteca.menu_salvar()
-                    break
-            elif selection == 8:
-                biblioteca.cadastrar_filial()
-                opcao = int(input(f' 1 - Voltar ao menu \n 0 - Encerrar atividades'))
-                if opcao == 0:
-                    biblioteca.menu_salvar()
-                    break
-
-            elif selection == 9:
-                biblioteca.listar_estoque_filial()
-                opcao = int(input(f' 1 - Voltar ao menu \n 0 - Encerrar atividades'))
-                if opcao == 0:
-                    biblioteca.menu_salvar()
-                    break
-
-            elif selection == 10:
-                biblioteca.listar_filiais()
-                opcao = int(input(f' 1 - Voltar ao menu \n 0 - Encerrar atividades'))
-                if opcao == 0:
-                    biblioteca.menu_salvar()
-                    break
-            elif selection == 11:
-                biblioteca.buscar_codigo_filial()
-                print('---------------------------------')
-                opcao = int(input(f' 1 - Voltar ao menu \n 0 - Encerrar atividades'))
-                if opcao == 0:
-                    biblioteca.menu
-                    break
-
-
+    def voltar_ou_encerrar(self):
+        opcao = input(f' 1 - Voltar ao menu \n 0 - Encerrar atividades')
+        return opcao == '1'
 
     def buscar_estoque(self):
         numeroestoque = int(input(f'Digite o numero minimo de estoque que deseja buscar: '))
         codigofilial = int(input('Digite o código da filial que deseja buscar: '))
-        filial = next((filial for filial in self.lista_filiais if filial.codigo == codigofilial), None)
-        if filial:
+        for filial in self.lista_filiais:
+            if filial.codigo == codigofilial:
+                filialencontrada = filial
+        if filialencontrada:
             for livro in filial.listalivros:
                 if livro.estoque >= numeroestoque:
-                    print(f'>>>>> Cod#{livro.codigo} \n Titulo/Editora: {livro.titulo}/{livro.editora} \n Categoria: {livro.area} \n Valor: R$ {livro.valor} \n Estoque: {livro.estoque} unidades  \n Valor total em estoque: R$ {livro.estoque * livro.valor}')
+                    print(livro)
                     print('')
         else:
             print(f'Filial com código {codigofilial} não encontrada.')
@@ -196,12 +159,14 @@ class Biblioteca:
 
     def buscar_preco(self):
         codigofilial = int(input('Digite o código da filial: '))
-        filial = next((filial for filial in self.lista_filiais if filial.codigo == codigofilial), None)
-        if filial:
+        for filial in self.lista_filiais:
+            if filial.codigo == codigofilial:
+                filialencontrada = filial
+        if filialencontrada:
             preco = float(input(f'Digite o preço limite que deseja buscar: '))
             for livro in filial.listalivros:
                 if livro.valor <= preco:
-                     print(f'>>>>> Cod#{livro.codigo} \n Titulo/Editora: {livro.titulo}/{livro.editora} \n Categoria: {livro.area} \n Valor: R$ {livro.valor} \n Estoque: {livro.estoque} unidades  \n Valor total em estoque: R$ {livro.estoque * livro.valor}')
+                     print(livro)
                      print('')
         else:
             print(f'Filial com código {codigofilial} não encontrada.')
@@ -209,12 +174,15 @@ class Biblioteca:
 
     def buscar_nome(self):
         codigofilial = int(input('Digite o código da filial: '))
-        filial = next((filial for filial in self.lista_filiais if filial.codigo == codigofilial), None)
+        for filial in self.lista_filiais:
+            if filial.codigo == codigofilial:
+                filialencontrada = filial
+
         nome = input(f'Digite o nome do livro que deseja buscar: ')
-        if filial:
+        if filialencontrada:
             for livro in filial.listalivros:
                 if livro.titulo == nome:
-                     print(f'>>>>> Cod#{livro.codigo} \n Titulo/Editora: {livro.titulo}/{livro.editora} \n Categoria: {livro.area} \n Valor: R$ {livro.valor} \n Estoque: {livro.estoque} unidades  \n Valor total em estoque: R$ {livro.estoque * livro.valor}')
+                     print(livro)
                      print('')
                 else:
                     print(f'Livro com nome {nome} não encontrado.')
@@ -224,12 +192,15 @@ class Biblioteca:
 
     def buscar_categoria(self):
         codigofilial = int(input('Digite o código da filial: '))
-        filial = next((filial for filial in self.lista_filiais if filial.codigo == codigofilial), None)
-        if filial:
+        for filial in self.lista_filiais:
+            if filial.codigo == codigofilial:
+                filialencontrada = filial
+
+        if filialencontrada:
             categoria = input(f'Digite a categoria do livro que deseja buscar: ')
             for livro in filial.listalivros:
                 if livro.area == categoria:
-                     print(f'>>>>> Cod#{livro.codigo} \n Titulo/Editora: {livro.titulo}/{livro.editora} \n Categoria: {livro.area} \n Valor: R$ {livro.valor} \n Estoque: {livro.estoque} unidades  \n Valor total em estoque: R$ {livro.estoque * livro.valor}')
+                     print(livro)
                      print('')
         else:
             print(f'Livro com categoria {categoria} não encontrada.')
@@ -238,8 +209,10 @@ class Biblioteca:
     def valortotal_estoque(self):
         soma = 0
         codigofilial = int(input('Digite o código da filial: '))
-        filial = next((filial for filial in self.lista_filiais if filial.codigo == codigofilial), None)
-        if filial:
+        for filial in self.lista_filiais:
+            if filial.codigo == codigofilial:
+                filialencontrada = filial
+        if filialencontrada:
              for livro in filial.listalivros:
                 soma += livro.valor * livro.estoque
                 print(f'Valor total no estoque: R$ {soma}')
@@ -258,13 +231,16 @@ class Biblioteca:
         valor = float(input("Digite o valor do livro: "))
         estoque = int(input("Digite o estoque do livro: "))
         filialcodigo = input("Digite o código da filial: ")
-        filial = next((filial for filial in self.lista_filiais if filial.codigo == filialcodigo), None)
+        for filial in self.lista_filiais:
+            if filial.codigo == filialcodigo:
+                filialencontrada = filial
+        if not filialencontrada:
+            print(f'Filial não encontrada.')
         livronovo = Livro(titulo, codigo, editora, area, ano, valor, estoque) 
-        if not filial:
-            print(f'Filial com código {filialcodigo} não registrada.')
 
-
-        livroexistente = next((livro for livro in filial.listalivros if livro.codigo == codigo or livro.titulo == titulo), None)  
+        for livro in filial.listalivros:
+            if livro.codigo == codigo or livro.titulo == titulo:
+                livroexistente = livro
         if livroexistente:
             livroexistente.estoque += estoque
             print(f'Livro {livroexistente.titulo} atualizado na filial {filial.nome} agora com estoque total de {livroexistente.estoque}.')
@@ -279,19 +255,6 @@ class Biblioteca:
             filial.livrosalvar.append(livronovo)
             print(f'Livro {livronovo.titulo} cadastrado na filial {filial.nome}.')
         
-    def listar_estoque_filial(self):
-        codigofilial = int(input('Digite o código da filial: '))
-        print('')
-        filial = next((filial for filial in self.lista_filiais if filial.codigo == codigofilial), None)
-        if filial:
-            print(f'Filial: {filial.nome}')
-            print('')
-            for livro in filial.listalivros:
-                print(f'>>>>> Cod#{livro.codigo} \n Título/Editora: {livro.titulo}/{livro.editora} \n Categoria: {livro.area} \n Valor: R$ {livro.valor} \n Estoque: {livro.estoque} unidades  \n Valor total em estoque: R$ {livro.estoque * livro.valor}')
-                print('')
-        else:
-            print(f'Filial com código {codigofilial} não encontrada.')
-
     def buscar_codigo_filial(self):
         codigolivro = int(input('Digite o código do livro: '))
         print('---------------------------------')
@@ -316,9 +279,7 @@ class Biblioteca:
                 if livro.codigo == codigolivro:
                     print(f'Valor: R$ {livro.valor} >>> {filial.nome}, estoque: {livro.estoque} unidades')
         if livroencontrado:
-            print(f'Valor total em estoque: R$ {somaestoque}\n')       
-        
-
+            print(f'Valor total em estoque: R$ {somaestoque}\n')
 
 ## Definindo a classe Filial ------------------------------------------------------------
 
@@ -331,6 +292,16 @@ class Filial:
         self.listalivros = []
         self.livrosalvar = []
 
+    def __str__(self):
+        return (f' >>>>> Cod#: {self.codigo}\n Nome: {self.nome}\n Endereço: {self.endereco}\n Contato: {self.contato}\n')
+
+
+    def listar_estoque_filial(self):
+        print(f'Filial: {self.nome}')
+        print('')
+        for livro in self.listalivros:
+            print(livro)
+
 ## Definindo a classe Livro ------------------------------------------------------------
 class Livro:
     def __init__(self,titulo,codigo,editora,area,ano,valor,estoque):
@@ -342,6 +313,9 @@ class Livro:
         self.valor = valor
         self.estoque = estoque
 
+    def __str__(self):
+        return  (f' >>>>> Cod#: {self.codigo}\n Título: {self.titulo}\n Ano: {self.ano}\n Editora: {self.editora}\n Área: {self.area}\n Valor: {self.valor}\n Estoque: {self.estoque} Un\n Total em Estoque: {self.estoque * self.valor}\n')
+    
 if __name__ == "__main__":
     biblioteca = Biblioteca()
     biblioteca.menu()
