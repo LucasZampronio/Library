@@ -1,5 +1,5 @@
 #FL,321,Barra,AV Ipiranga 77,51 997234531
-231,Harry Potter,2003,Fantasia,JK,R$10.00,24
+231,Harry Potter,2003,Fantasia,JK,R$1.00,24
 4040,Creed,1980,Luta,Stalone,R$10.00,10
 #FL,221,Praia,Av Praia,3333 3333
 231,Harry Potter,2003,Fantasia,JK,R$29.00,10
